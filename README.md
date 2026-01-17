@@ -17,7 +17,9 @@ The logic implemented here follows the methodology described in:
 ### 1. AUROC to Cohen's $d$
 
 **Function:** `auc_to_d(auc, s1=None, s2=None, p1=None)`  
+
 **Formula:**
+
 $$
 d = \sqrt{\frac{s_1^2 + s_2^2}{p_1 s_1^2 + p_2 s_2^2}} \cdot \Phi^{-1}(\text{AUC})
 $$
@@ -29,7 +31,9 @@ $$
 ### 2. Log-Odds Ratio to Cohen's $d$
 
 **Function:** `logodds_to_d(logodds)`  
+
 **Formula:**
+
 $$
 d = \frac{LOR \cdot \sqrt{3}}{\pi}
 $$
@@ -39,18 +43,18 @@ $$
 
 ### 3. Cohen's $d$ to point-biserial correlation $r_{pb}$
 
-  
 **Function:** `cohen_d_to_r_pb(d, p=0.5)`  
+
 **Formula:**
+
 $$
-r = \frac{d}{\sqrt{d^2 + \frac{1}{p_1 p_2}}}
+r_{pb} = \frac{d}{\sqrt{d^2 + \frac{1}{p_1 p_2}}}
 $$
 
 * **Assumptions:** Normality of the underlying latent distributions for the two groups.
 * **See:** McGrath, R. E., & Meyer, G. J. (2006). When effect sizes disagree: The case of *r* and *d*. *Psychological Methods*, 11(4), 386.
 
 ---
-
 
 ### 4. Sensitivity & Specificity to Log-Odds Ratio
 
@@ -59,3 +63,10 @@ $$
 ### 5. PPV & NPV to Log-Odds Ratio
 
 **Function:** `logodds_from_ppv_npv(ppv, npv)`
+
+---
+
+## Installation
+
+```bash
+pip install git+[https://github.com/PavelNovikov/qconv-parametric.git](https://github.com/PavelNovikov/qconv-parametric.git)
