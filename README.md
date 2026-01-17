@@ -66,6 +66,27 @@ $$
 
 ---
 
+## Installation
+
 ```bash
 pip install git+https://github.com/PavelNovikov/qconv-parametric.git
+```
+
+## Usage example
+```python
+import qconv_param as qcp
+
+# 1. Start with diagnostic metrics (e.g., Sensitivity = 0.8, Specificity = 0.7)
+lor = qcp.logodds_from_sens_spec(sensitivity=0.8, specificity=0.7)
+
+# 2. Convert Log-Odds Ratio to Cohen's d
+d_value = qcp.logodds_to_d(lor)
+
+# 3. Convert Cohen's d to point-biserial correlation r_pb
+# Assuming a balanced population (p=0.5)
+r_val = qcp.cohen_d_to_r_pb(d=d_value, p=0.5)
+
+print(f"Log-Odds Ratio: {lor:.4f}")
+print(f"Cohen's d:      {d_value:.4f}")
+print(f"Point-biserial correlation:  {r_val:.4f}")
 ```
