@@ -67,5 +67,5 @@ $$
 ---
 
 ```bash
-pip install git+[https://github.com/PavelNovikov/qconv-parametric.git](https://github.com/PavelNovikov/qconv-parametric.git)
+pip install git+https://github.com/PavelNovikov/qconv-parametric.git
 ```
