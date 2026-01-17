@@ -1,6 +1,6 @@
 # QConv-Parametric
 
-This project provides an independent implementation of the statistical conversion toolbox used in **Azucar, Marengo, and Settanni (2018)**. It enables the conversion of classification performance metrics into Pearson correlation coefficients ($r$).
+This project provides an independent implementation of the statistical conversion toolbox used in **Azucar, Marengo, and Settanni (2018)**. It enables the conversion of classification performance metrics into Pearson correlation coefficients ($r$), corresponding to the correlation between a continuous prediction function and a binary class variable (i.e., the point-biserial correlation).
 
 ## Project Context
 
