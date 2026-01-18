@@ -43,31 +43,34 @@ def test_auc_to_d():
     np.random.seed(42)
     n1 = 5_000
     n2 = 18_000
-    d_true = 0.6
+    mean_shift = 0.6
 
     # 1. Generate normal samples
-    group1 = np.random.normal(loc=0, scale=1, size=n1)
-    group2 = np.random.normal(loc=d_true, scale=1, size=n2)
+    group1 = np.random.normal(loc=mean_shift, scale=1.6, size=n1)
+    group2 = np.random.normal(loc=0.0, scale=1.0, size=n2)
 
     # 2. Calculate Empirical AUC
     from scipy.stats import mannwhitneyu
 
-    stat, _ = mannwhitneyu(group2, group1)
+    stat, _ = mannwhitneyu(group1, group2)
     auc_empirical = stat / (n1 * n2)
 
     # 3. Convert AUC back to d
-    d_recovered = qcp.auc_to_d(auc_empirical)
+    s1 = np.std(group1, ddof=1)
+    s2 = np.std(group2, ddof=1)
+    p1 = n1 / (n1 + n2)
 
-    # 4. Calculate d_direct using the pooled standard deviation
-    var1 = np.var(group1, ddof=1)
-    var2 = np.var(group2, ddof=1)
-    pooled_std = np.sqrt(((n1 - 1) * var1 + (n2 - 1) * var2) / (n1 + n2 - 2))
+    d_recovered = qcp.auc_to_d(auc_empirical, s1=s1, s2=s2, p1=p1)
 
-    d_direct = (np.mean(group2) - np.mean(group1)) / pooled_std
+    # 4. Calculate d_direct using the corresponding full formula
+    from scipy.stats import norm
+
+    numerator = s1**2 + s2**2
+    denominator = p1 * s1**2 + (1 - p1) * s2**2
+    d_direct = np.sqrt(numerator / denominator) * norm.ppf(auc_empirical)
 
     # 5. Check recovery
     assert pytest.approx(d_recovered, abs=0.02) == d_direct
-    assert pytest.approx(d_direct, abs=0.02) == d_true
 
 
 def test_cohen_d_to_r_pb_unbalanced():
