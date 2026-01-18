@@ -24,8 +24,8 @@ $$
 d = \sqrt{\frac{s_1^2 + s_2^2}{p_1 s_1^2 + p_2 s_2^2}} \cdot \Phi^{-1}(\text{AUC})
 $$
 
-* **Simplified Case:** When $s_1 = s_2$ and $p_1 = p_2 = 0.5$, the formula simplifies to $d = \sqrt{2} \cdot \Phi^{-1}(\text{AUC})$.
-* **Assumptions:** The underlying distributions of the two groups follow Gaussian distributions with equal variances.
+* **Simplified Case:** When either the class standard deviations are equal ($s_1 = s_2$) or the class base rates are balanced ($p_1 = p_2 = 0.5$), the conversion reduces to $d = \sqrt{2} \cdot \Phi^{-1}(\mathrm{AUC})$.
+* **Assumptions:** The underlying distributions of the two groups follow Gaussian distributions.
 * **See:** Ruscio, J. (2008). A probability-based measure of effect size: Robustness to base rates and other factors. *Psychological Methods*, 13(1), 19.
 
 ### 2. Log-Odds Ratio to Cohen's $d$

@@ -29,6 +29,11 @@ def auc_to_d(auc, s1=None, s2=None, p1=None):
     """
     Converts AUC to Cohen's d.
 
+    Simplifications:
+    - If s1 = s2 (equal variances), base rates cancel out
+    - If p1 = 0.5 (balanced classes), variance differences cancel out
+    - Either condition reduces to d = sqrt(2) * z
+
     Args:
         auc (float): The Area Under the Curve (0.5 to 1.0).
         s1 (float, optional): Standard deviation of the first class.
@@ -42,25 +47,38 @@ def auc_to_d(auc, s1=None, s2=None, p1=None):
         Ruscio, J. (2008). A probability-based measure of effect size:
         Robustness to base rates and other factors. Psychological Methods, 13(1), 19.
     """
+
+    # Validate that the AUC lies within its meaningful range.
+    if not (0.5 <= auc <= 1.0):
+        raise ValueError("AUC must be between 0.5 and 1.0")
+
+    # Convert AUC to a standard normal z-score.
     z_score = norm.ppf(auc)
 
-    params = [s1, s2, p1]
-    any_provided = any(x is not None for x in params)
-    all_provided = all(x is not None for x in params)
-
-    # Balanced Case
-    # Assumes p1=0.5, p2=0.5, and s1=s2. Scaling factor simplifies to sqrt(2).
-    if not any_provided:
+    # If no contextual parameters are provided, assume a fully balanced case
+    # with equal variances and equal base rates.
+    if s1 is None and s2 is None and p1 is None:
         return np.sqrt(2) * z_score
 
-    # Parametric Case
-    # Requires all context arguments to avoid hidden default assumptions.
-    if not all_provided:
+    # If the class standard deviations are equal, the base rates cancel out
+    # and the simplified conversion applies.
+    if s1 is not None and s2 is not None and np.isclose(s1, s2):
+        return np.sqrt(2) * z_score
+
+    # If the class base rates are balanced, variance differences cancel out
+    # and the simplified conversion applies.
+    if p1 is not None and np.isclose(p1, 0.5):
+        return np.sqrt(2) * z_score
+
+    # If no simplification applies, all contextual parameters are required
+    # to avoid making implicit assumptions.
+    if s1 is None or s2 is None or p1 is None:
         raise ValueError(
-            "Parametric derivation requires all context arguments: s1, s2, and p1. "
-            "For the balanced case, leave all arguments as None."
+            "Full parametric conversion requires s1, s2, and p1 "
+            "unless an exact simplification condition is met."
         )
 
+    # Compute Cohen's d using the full parametric formula.
     p2 = 1 - p1
     numerator = s1**2 + s2**2
     denominator = (p1 * s1**2) + (p2 * s2**2)
